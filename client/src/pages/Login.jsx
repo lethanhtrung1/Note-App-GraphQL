@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Button, Typography } from '@mui/material/'
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
 import { AuthContext } from "../context/AuthProvider";
-import { useNavigate, useNavigation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
     const auth = getAuth();
