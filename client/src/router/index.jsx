@@ -4,10 +4,16 @@ import Home from "../pages/Home";
 import AuthProvider from "../context/AuthProvider";
 import ProtectedRoute from "./ProtectedRoute";
 import ErrorPage from "../pages/ErrorPage";
+import NoteList from "../components/NoteList";
+import Note from "../components/Note";
 
 const AuthLayout = () => {
-    return <AuthProvider><Outlet /></AuthProvider>
-}
+    return (
+        <AuthProvider>
+            <Outlet />
+        </AuthProvider>
+    );
+};
 
 export default createBrowserRouter([
     {
@@ -16,21 +22,29 @@ export default createBrowserRouter([
         children: [
             {
                 element: <Login />,
-                path: '/login',
+                path: "/login",
             },
             {
                 element: <ProtectedRoute />,
                 children: [
                     {
                         element: <Home />,
-                        path: '/',
-                    }
-                ]
-            }
-            // {
-            //     element: <Home />,
-            //     path: '/',
-            // }
-        ]
-    }
-])
+                        path: "/",
+                        children: [
+                            {
+                                element: <NoteList />,
+                                path: `folders/:folderId`,
+                                children: [
+                                    {
+                                        element: <Note />,
+                                        path: `note/:noteId`,
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+    },
+]);
