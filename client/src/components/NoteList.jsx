@@ -1,9 +1,12 @@
 import { Card, CardContent, Grid, List, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
-import { Link, Outlet } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, Outlet, useParams } from "react-router-dom";
 
 export default function NoteList() {
+    const { noteId } = useParams();
+    const [activeNoteId, setActiveNoteId] = useState(noteId);
+
     const folder = { notes: [{ id: "1", content: "<p>New Note</p>" }] };
 
     return (
@@ -30,8 +33,18 @@ export default function NoteList() {
                 >
                     {folder.notes.map(({ id, content }) => {
                         return (
-                            <Link key={id} to={`note/${id}`} style={{ textDecoration: "none" }}>
-                                <Card sx={{ marginBottom: "5px" }}>
+                            <Link
+                                key={id}
+                                to={`note/${id}`}
+                                style={{ textDecoration: "none" }}
+                                onClick={() => setActiveNoteId(id)}
+                            >
+                                <Card
+                                    sx={{
+                                        marginBottom: "5px",
+                                        backgroundColor: id === activeNoteId ? "rgb(255, 211, 140)" : null,
+                                    }}
+                                >
                                     <CardContent sx={{ "&:last-child": { paddingBottom: "10px" }, padding: "10px" }}>
                                         <div
                                             style={{ fontSize: 14, fontWeight: "bold" }}
