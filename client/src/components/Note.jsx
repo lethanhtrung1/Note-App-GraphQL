@@ -2,13 +2,10 @@ import React, { useEffect, useState } from "react";
 import { ContentState, EditorState, convertFromHTML, convertToRaw } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
+import { useLoaderData } from "react-router-dom";
 
 export default function Note() {
-    const note = {
-        id: "999",
-        content: "<p>New Note content</p>",
-    };
-
+    const { note } = useLoaderData();
     const [editorState, setEditorState] = useState(() => {
         return EditorState.createEmpty();
     });
@@ -29,11 +26,5 @@ export default function Note() {
         setRawHTML(draftToHtml(convertToRaw(e.getCurrentContent())));
     };
 
-    return (
-        <Editor 
-            editorState={editorState}
-            onEditorStateChange={handleOnChange} 
-            placeholder="Write something!" 
-        />
-    );
+    return <Editor editorState={editorState} onEditorStateChange={handleOnChange} placeholder="Write something!" />;
 }
