@@ -1,35 +1,49 @@
 import React, { useContext } from "react";
-import { Button, Typography } from '@mui/material/'
+import { Button, Typography } from "@mui/material/";
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
 import { AuthContext } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
+import { graphQLRequest } from "../utils/request";
 
 export default function Login() {
     const auth = getAuth();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const { user } = useContext(AuthContext);
 
     const handleLoginWithGoogle = async () => {
         const provider = new GoogleAuthProvider();
 
-        const res = await signInWithPopup(auth, provider);
+        const {
+            user: { uid, displayName },
+        } = await signInWithPopup(auth, provider);
+        const { data } = await graphQLRequest({
+            query: `mutation register($uid: String!, $name; String!) {
+            register(uid: $uid, name: $name) {
+                uid
+                name
+            }
+        }`,
+            variables: {
+                uid,
+                name: displayName,
+            },
+        });
+        console.log("register", { data });
+    };
 
-        console.log({res});
-    }
-
-    if(user?.uid) {
-        navigate('/');
+    if (user?.uid) {
+        navigate("/");
         return;
     }
 
     return (
         <>
-            <Typography variant="h5" sx={{ marginBottom: '12px' }}>
+            <Typography variant="h5" sx={{ marginBottom: "12px" }}>
                 Welcome to Note App
             </Typography>
-            <Button variant="outlined" onClick={ handleLoginWithGoogle }>
+            <Button variant="outlined" onClick={handleLoginWithGoogle}>
                 Login with Google
             </Button>
         </>
-    )
+    );
 }

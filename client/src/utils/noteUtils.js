@@ -1,3 +1,5 @@
+import { graphQLRequest } from "./request";
+
 export const notesLoader = async ({ params: { folderId } }) => {
     console.log("loader", { folderId });
     const query = `query ExampleQuery($folderId: String) {
@@ -9,24 +11,14 @@ export const notesLoader = async ({ params: { folderId } }) => {
             content
           }
         }
-      }`;
+    }`;
 
-    const res = await fetch("http://localhost:4000/graphql", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
+    const data = await graphQLRequest({
+        query,
+        variables: {
+            folderId: folderId,
         },
-        body: JSON.stringify({
-            query,
-            variables: {
-                folderId: folderId,
-            },
-        }),
     });
-
-    const { data } = await res.json();
-    console.log("[Note List]", { data });
     return data;
 };
 
@@ -37,23 +29,13 @@ export const noteLoader = async ({ params: { noteId } }) => {
           id
           content
         }
-      }`;
+    }`;
 
-    const res = await fetch("http://localhost:4000/graphql", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
+    const data = await graphQLRequest({
+        query,
+        variables: {
+            noteId,
         },
-        body: JSON.stringify({
-            query,
-            variables: {
-                noteId: noteId,
-            },
-        }),
     });
-
-    const { data } = await res.json();
-    console.log("[Note List]", { data });
     return data;
 };
